@@ -13,7 +13,7 @@ Plateau::Plateau() {
 
 // Méthode générerGrille : Met des murs sur les bords du plateau
 void Plateau::genererGrille() {
-
+    
 }
 
 void Plateau::placerMur(int x, int y, std::string orientation) { 
