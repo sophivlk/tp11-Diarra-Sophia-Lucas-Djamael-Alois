@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -28,7 +29,10 @@ typedef enum TypeCouleur {ROUGE, VERT, BLEU, JAUNE}; //permet de definir les 4 c
  * - getX() : retourne la position x du robot
  * - getY() : retourne la position y du robot
  * - get_couleur() : retourne la couleur du robot
+ * - get_couleur_nom() : retourne le nom de la couleur du robot (string)
  * - get_nombre_de_deplacements() : retourne le nombre de deplacements effectues par le robot
+ * - positionOccupee(int nx, int ny, const vector<Robot*> &robots) : verifie si une position est occupee par un autre robot
+ * - déplacement(string direction, const vector<Robot*> &robots) : deplace le robot sur le plateau (haut, bas, gauche, droite) jusqu'à obstacle
 
  * 
  * 
@@ -58,6 +62,15 @@ public:
     //accesseurs couleur
     TypeCouleur getCouleur() const; //const dire que les attributs ne sont pas modifies
 
+    //accesseurs couleur nom
+    string getCouleurNom() const; //const dire que les attributs ne sont pas modifies
+
     //accesseurs nombre_de_deplacements
     int getNombreDeDeplacements() const; //const dire que les attributs ne sont pas modifies
+
+    //position occupee par un autre robot
+    bool positionOccupee(int nx, int ny, const vector<Robot*> &robots); //verifie si une position est occupee par un autre robot
+
+    //deplacement
+    void deplacement(string direction, const vector<Robot*> &robots); //deplace le robot sur le plateau (haut, bas, gauche, droite) jusqu'à obstacle
 };
