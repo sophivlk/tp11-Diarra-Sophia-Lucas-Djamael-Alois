@@ -93,9 +93,13 @@ Jeu::Jeu(){
 };
 
 //set tuile objectif_actuel, met a jour la position de cette tuile
+//tirer une tuile parmi les 17 et le placer au centre 
  Tuile_objectif Jeu::Tuile_objectif tirer_tuile_objectif(Tuile_objectif& liste_tuiles_objectifs){
-
-
+    int idx;
+    idx= rand()%18;
+    objectif_actuel= liste_tuiles_objectifs[idx];
+    tuile_couleur= objectif_actuel.get_couleur();
+    tuile_symbole= objectif_actuel.get_symbole();
 };
 
  //demarre la phase de recherche et activation du sablier
@@ -138,7 +142,7 @@ while (true) {
     cout << "Robot " << couleurInput << " : (" << robots[couleurRobot].getX() << ", " << robots[couleurRobot].getY() << ")" << endl;
 
 
-    //affichage de la grille a la fin de chaque déplacement ici
+    le_plateau.afficher_plateau();
 }
 
 //nombre de deplacements effectues par les 4 robots
@@ -155,10 +159,12 @@ for(size_t i = 0; i < robots.size(); ++i) {
 }
 cout << "Nombre total de deplacements : " << total_deplacements << endl;
 
-objectif_courantX = robots[getCouleur()].getX();
-objectif_courantY = robots[getCouleur()].getY();
-    
+objectif_courantX = robots[couleurRobot].getX();
+objectif_courantY = robots[couleurRobot].getY();
+objectif_courant.Set_position(objectif_courantX,objectif_courantY);
 };
+
+
 //verifier si la position de la tuile objectif actuel est celle de la case objectif
 void Jeu::valider_solution(Tuile_objectif objectif_courant){
     posX= objectif_actuel.get_X();
@@ -168,10 +174,6 @@ void Jeu::valider_solution(Tuile_objectif objectif_courant){
 };
 }
 
-
-void Jeu::afficher_plateau(){
-
-};
 Jeu::~Jeu() {
     //nothing to do here
 }
