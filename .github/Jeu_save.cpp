@@ -250,6 +250,7 @@ Jeu::Jeu(){
 
 //set tuile objectif_actuel, met a jour la position de cette tuile
 //tirer une tuile parmi les 17 et le placer au centre 
+<<<<<<< HEAD
 
 // set tuile objectif_actuel, met a jour la position de cette tuile
 Tuile_objectif Jeu::Tuile_objectif tirer_tuile_objectif()
@@ -258,6 +259,14 @@ Tuile_objectif Jeu::Tuile_objectif tirer_tuile_objectif()
     this->objectif_actuel = this->liste_tuiles_objectifs[random_tuile];
 
 
+=======
+ Tuile_objectif Jeu::Tuile_objectif tirer_tuile_objectif(Tuile_objectif& liste_tuiles_objectifs){
+    int idx;
+    idx= rand()%18;
+    objectif_actuel= liste_tuiles_objectifs[idx];
+    tuile_couleur= objectif_actuel.get_couleur();
+    tuile_symbole= objectif_actuel.get_symbole();
+>>>>>>> 6a4990e8c36c437232a32a840337c50482cd6b07
 };
 
  //demarre la phase de recherche et activation du sablier
