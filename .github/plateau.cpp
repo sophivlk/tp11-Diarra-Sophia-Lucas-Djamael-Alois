@@ -1,5 +1,5 @@
 #include "plateau.h"
-#include "robot_test.h"  // utilisé pour le test tant que le vrai robot n'est pas prêt
+#include "robot.h"  
 #include <iostream>    // pour std::cout
 #include <string>      // pour std::string
 #include <vector>      // pour std::vector
@@ -43,28 +43,53 @@ void Plateau::placerMur(int x, int y, std::string orientation) {
 }
 
 void Plateau::placerRobot(Robot robot) {
-    srand(time(0)); // Initialise le générateur de nombres aléatoires
-
-    int x, y;
-    do {
-        x = rand() % 16;
-        y = rand() % 16;
-    } while (grille[x][y] != 0); // recommence si la case est occupée
-
-    grille[x][y] = 2; // robot rouge = 2, par exemple
-
-    // Met à jour la position du robot
-    robot.setPosition(x, y);
-}
-
-void Plateau::afficherPlateau() {
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 16; j++) {
-            if (grille[i][j] == 0) std::cout << " ";
-            else if (grille[i][j] == 1) std::cout << "#";
-            else if (grille[i][j] == 2) std::cout << "R"; // robot rouge
-            std::cout << " ";
+    int x = robot.getX();
+    int y = robot.getY();
+    
+    // Vérifie que la case est libre
+    if (grille[y][x] == 0) {
+        switch (robot.getCouleur()) {
+            case ROUGE: grille[y][x] = 2; break;
+            case VERT:  grille[y][x] = 3; break;
+            case BLEU:  grille[y][x] = 4; break;
+            case JAUNE: grille[y][x] = 5; break;
         }
-        std::cout << std::endl;
+    } else {
+        std::cout << "Position (" << x << "," << y << ") déjà occupée !" << std::endl;
     }
 }
+
+
+void Plateau::afficherPlateau() {
+    const int TAILLE = 16;
+
+    // Ligne du haut
+    std::cout << "+";
+    for (int j = 0; j < TAILLE; ++j) {
+        std::cout << "--";
+    }
+    std::cout << "+" << std::endl;
+
+    // Affichage ligne par ligne
+    for (int i = 0; i < TAILLE; ++i) {
+        std::cout << "|";
+        for (int j = 0; j < TAILLE; ++j) {
+            if (grille[i][j] == 0) std::cout << "  ";
+            else if (grille[i][j] == 1) std::cout << "# ";
+            else if (grille[i][j] == 2) std::cout << "R ";
+            else if (grille[i][j] == 3) std::cout << "V ";
+            else if (grille[i][j] == 4) std::cout << "B ";
+            else if (grille[i][j] == 5) std::cout << "J ";
+            else std::cout << "? "; // pour tout autre code
+        }
+        std::cout << "|" << std::endl;
+    }
+
+    // Ligne du bas
+    std::cout << "+";
+    for (int j = 0; j < TAILLE; ++j) {
+        std::cout << "--";
+    }
+    std::cout << "+" << std::endl;
+}
+
