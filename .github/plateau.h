@@ -24,6 +24,8 @@ public:
     void genererGrille(); //Met des murs sur les bords du plateau
     void placerMur(int x, int y, std::string orientation); //Place un mur à (x,y)
     void placerRobot(Robot robot); //Place un robot à une case vide
+
+    void afficherPlateau();
 };
 
 #endif
