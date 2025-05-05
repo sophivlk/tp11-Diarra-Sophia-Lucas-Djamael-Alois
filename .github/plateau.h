@@ -2,15 +2,19 @@
 #define PLATEAU_H
 
 #include <vector>
-#include "Robot.h" // à modfifer selon appelation exacte
-#include "TuileObjectif.h" // à modfifer selon appelation exacte
+#include "robot_test.h" // à modfifer selon appelation exacte
+// #include "TuileObjectif.h" // à modfifer selon appelation exacte
+#include <iostream>    // pour std::cout
+#include <string>      // pour std::string
+#include <vector>      // pour std::vector
+
 
 class Plateau {
 private:
     // Attributs : Grille, Robot, Tuiles Objectif
     int grille[16][16];
     std::vector<Robot>
-    std::vector<TuileObjectif>
+    //std::vector<TuileObjectif>
 
 public:
     // Constructeur (vide)

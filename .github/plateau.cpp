@@ -1,6 +1,8 @@
 #include "plateau.h"
 #include "robot_test.h"  // utilisé pour le test tant que le vrai robot n'est pas prêt
-
+#include <iostream>    // pour std::cout
+#include <string>      // pour std::string
+#include <vector>      // pour std::vector
 #include <cstdlib> // pour rand()
 #include <ctime>   // pour time()
 
