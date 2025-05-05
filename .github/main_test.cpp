@@ -8,7 +8,7 @@ int main() {
     Plateau plateau;
     plateau.genererGrille();     // Génère murs extérieurs + croix
 
-    Robot r("rouge");            // Crée un robot 
+    Robot r;            // Crée un robot 
     plateau.placerRobot(r);      // Place le robot rouge
 
     plateau.afficherPlateau();   // Affiche tout le plateau dans le terminal

@@ -23,8 +23,12 @@ void Plateau::genererGrille() {
     grille[15][i] = 1;       // bas
     grille[i][0] = 1;        // gauche
     grille[i][15] = 1;       // droite
+    // Croix centrale (zone fixe au centre du plateau)
+    grille[7][7] = 1;
+    grille[7][8] = 1;
+    grille[8][7] = 1;
+    grille[8][8] = 1;
 }
-
 }
 
 void Plateau::placerMur(int x, int y, std::string orientation) { 
