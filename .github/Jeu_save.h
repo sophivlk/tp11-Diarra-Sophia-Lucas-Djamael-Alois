@@ -16,39 +16,34 @@ private:
     vector<Joueurs> liste_joueurs;
     Sablier le_sablier;
     Tuile_objectif objectif_actuel;
+    Tuile_objectif objectif_courant;
     vector<Tuile_objectif> liste_tuiles_objectifs;
 
 public:
 //Constructeurs
-Jeu(int nbr_joueurs);
+
 Jeu();
 
 //méthodes
+void set_Joueurs();
 
-//Disposer automatiquement les tuiles sur le plateau de manière aléatoire
+//Disposer automatiquement les tuiles dans les angles
 void init_position_tuile(int x, int y, char type_tuile);
 
-//Disposer automatiquement les 4 robots sur le plateau de manière aléatoire
-void init_position_robot(Robot& robot);
+Jeu::annoncer_Solution()
+
+Jeu::proposer_Solution()
 
 //disposer les differents tokens et afficher le plateau
 void initialiser_Jeu();
 
-//deplacer un robot sur le plateau
-//id_robot: id du robot a deplacer, x: coordonnee x de la tuile cible, y: coordonnee y de la tuile cible
-void deplacer_robot(int id_robot, int x, int y);
 
 //generation d'une tuile objectif aleatoire
-Tuile_objectif tirer_tuile_objectif(Tuile_objectif& liste_tuiles_objectifs);
+Tuile_objectif tirer_tuile_objectif();
 
 //comparer la solution du joueur actuel avec celle des autres joueurs
 void valider_solution();
 
-//gestion du tour de jeu: temps de jeu, choix du joueur, validation de la solution, affichage etat plateau
-void gerer_tour_de_jeu( Joueurs& joueur_actuel);
-
-//afficher le plateau de jeu
-void afficher_plateau();
 
 //destructeur
 ~Jeu() {
