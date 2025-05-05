@@ -15,6 +15,7 @@ public:
     void placerMur(int x, int y, std::string orientation);
     void placerRobot(Robot robot); // Place un robot
     void afficherPlateau(); // Affiche le plateau
+    bool caseVide(int x, int y); //Retourne true si case de la grille est vide
 };
 
 #endif

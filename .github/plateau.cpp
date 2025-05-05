@@ -16,7 +16,7 @@ Plateau::Plateau() {
     }
 }
 
-// Méthode générerGrille : Met des murs sur les bords du plateau
+// Méthode générerGrille : Met des murs sur les bords du plateau + zone de croix centrale
 void Plateau::genererGrille() {
     for (int i = 0; i < 16; i++) {
     grille[0][i] = 1;        // haut
@@ -93,3 +93,7 @@ void Plateau::afficherPlateau() {
     std::cout << "+" << std::endl;
 }
 
+
+bool Plateau::caseVide(int x, int y){
+    return grille[y][x] == 0;
+}
