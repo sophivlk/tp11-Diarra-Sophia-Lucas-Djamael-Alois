@@ -250,7 +250,6 @@ Jeu::Jeu(){
 
 //set tuile objectif_actuel, met a jour la position de cette tuile
 //tirer une tuile parmi les 17 et le placer au centre 
-<<<<<<< HEAD
 
 // set tuile objectif_actuel, met a jour la position de cette tuile
 Tuile_objectif Jeu::Tuile_objectif tirer_tuile_objectif()
