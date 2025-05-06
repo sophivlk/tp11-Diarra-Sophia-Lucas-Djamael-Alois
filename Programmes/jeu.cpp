@@ -1,9 +1,12 @@
-
-#include <vector>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 #include <vector>
+#include <array>
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <map>
 
 using namespace std;
 
@@ -45,10 +48,10 @@ void Jeu::set_Joueurs()
 void Jeu::init_position_tuile()
 {
     // Initialisation du generateur aleatoire
-    std::srand(static_cast<unsigned>(std::time(nullptr)));
+    srand(static_cast<unsigned>(time(nullptr)));
 
     // 1) Lister toutes les intersections (angles) de la grille 16×16 → indices 0..16
-    std::vector<std::pair<int, int>> allAngles;
+    vector<pair<int, int>> allAngles;
     for (int i = 0; i < 17; i++)
     {
         int x, y;
@@ -60,7 +63,7 @@ void Jeu::init_position_tuile()
     }
 
     // 3) Creation des tuiles
-    std::array<Tuile_objectif, 17> tiles;
+    array<Tuile_objectif, 17> tuiles;
 
     // 3a) 16 tuiles standards (ROUGE→JAUNE × LOSANGE→ROND)
     int idx = 0;
@@ -70,7 +73,7 @@ void Jeu::init_position_tuile()
         {
             // position
             auto p = allAngles[idx];
-            tiles[idx] = Tuile_objectif(p.first, p.second,
+            tuiles[idx] = Tuile_objectif(p.first, p.second,
                                         static_cast<TypeCouleur>(c),
                                         static_cast<TypeSymbole>(s));
             ++idx;
@@ -80,8 +83,8 @@ void Jeu::init_position_tuile()
     // 3b) 1 tuile MULTICOLORE avec symbole aleatoire
     {
         auto p = allAngles[idx];
-        TypeSymbole symRandom = static_cast<TypeSymbole>(std::rand() % (ROND + 1));
-        tiles[idx] = Tuile_objectif(p.first, p.second,
+        TypeSymbole symRandom = static_cast<TypeSymbole>(rand() % (ROND + 1));
+        tuiles[idx] = Tuile_objectif(p.first, p.second,
                                     MULTICOLORE,
                                     symRandom);
     }
@@ -89,84 +92,84 @@ void Jeu::init_position_tuile()
     // 4) Verifications
 
     // 4a) Unicite des positions
-    std::set<std::pair<int, int>> posSet;
-    for (auto &t : tiles)
+    set<pair<int, int>> posSet;
+    for (auto &t : tuiles)
     {
         int x, y;
         t.getPosition(&x, &y);
         posSet.insert({x, y});
     }
-    bool positionsUniques = (posSet.size() == tiles.size());
+    bool positionsUniques = (posSet.size() == tuiles.size());
 
     // 4b) Comptage couleur→symbole
-    std::map<TypeCouleur, std::map<TypeSymbole, int>> countMap;
-    for (auto &t : tiles)
+    map<TypeCouleur, map<TypeSymbole, int>> countMap;
+    for (auto &t : tuiles)
     {
         countMap[t.getCouleur()][t.getSymbole()]++;
     }
 
     // 5) Affichage
-    std::cout << "=== Resume des tuiles ===\n";
-    std::cout << "Total : " << tiles.size() << " tuiles\n";
-    std::cout << "Positions uniques ? " << (positionsUniques ? "OUI" : "NON") << "\n\n";
+    cout << "=== Resume des tuiles ===\n";
+    cout << "Total : " << tuiles.size() << " tuiles\n";
+    cout << "Positions uniques ? " << (positionsUniques ? "OUI" : "NON") << "\n\n";
 
-    std::cout << "Repartition (couleur = symbole) :\n";
+    cout << "Repartition (couleur = symbole) :\n";
     for (int c = ROUGE; c <= MULTICOLORE; ++c)
     {
         TypeCouleur col = static_cast<TypeCouleur>(c);
-        std::cout << " Couleur ";
+        cout << " Couleur ";
         switch (col)
         {
         case ROUGE:
-            std::cout << "ROUGE";
+            cout << "ROUGE";
             break;
         case VERT:
-            std::cout << "VERT";
+            cout << "VERT";
             break;
         case BLEU:
-            std::cout << "BLEU";
+            cout << "BLEU";
             break;
         case JAUNE:
-            std::cout << "JAUNE";
+            cout << "JAUNE";
             break;
         case MULTICOLORE:
-            std::cout << "MULTICOLORE";
+            cout << "MULTICOLORE";
             break;
         }
-        std::cout << " :\n";
+        cout << " :\n";
         for (int s = LOSANGE; s <= ROND; ++s)
         {
             TypeSymbole sym = static_cast<TypeSymbole>(s);
             int cnt = countMap[col][sym];
-            std::cout << "   Symbole ";
+            cout << "   Symbole ";
             switch (sym)
             {
             case LOSANGE:
-                std::cout << "LOSANGE";
+                cout << "LOSANGE";
                 break;
             case CARRE:
-                std::cout << "CARRE  ";
+                cout << "CARRE  ";
                 break;
             case ETOILE:
-                std::cout << "ETOILE ";
+                cout << "ETOILE ";
                 break;
             case ROND:
-                std::cout << "ROND   ";
+                cout << "ROND   ";
                 break;
             }
-            std::cout << " = " << cnt << "\n";
+            cout << " = " << cnt << "\n";
         }
     }
 
-    std::cout << "\nDetail de chaque tuile :\n";
-    for (size_t i = 0; i < tiles.size(); ++i)
+    cout << "\nDetail de chaque tuile :\n";
+    for (size_t i = 0; i < tuiles.size(); ++i)
     {
         int x, y;
         string nomCouleur, nomSymbole;
 
-        tiles[i].getPosition(&x, &y);
+        tuiles[i].getPosition(&x, &y);
 
-        switch (tiles[i].getSymbole())
+        switch (tuiles[i].getSymbole())
         {
         case LOSANGE:
             nomSymbole = "LOSANGE";
@@ -181,7 +184,7 @@ void Jeu::init_position_tuile()
             nomSymbole = "ROND   ";
             break;
         }
-        switch (tiles[i].getCouleur())
+        switch (tuiles[i].getCouleur())
         {
         case ROUGE:
             nomCouleur = "ROUGE";
@@ -199,7 +202,7 @@ void Jeu::init_position_tuile()
             nomCouleur = "MULTICOLORE";
             break;
         }
-        std::cout << " Tuile[" << i << "] @(" << x << "," << y << ")  Couleur=" << nomCouleur
+        cout << " Tuile[" << i << "] @(" << x << "," << y << ")  Couleur=" << nomCouleur
                   << "  Symbole=" << nomSymbole << "\n";
     }
 };
@@ -207,10 +210,12 @@ void Jeu::init_position_tuile()
 // Constructeur par défaut
 Jeu::Jeu()
 {
-    vector<Robot*> vRobots;
     // Création des robots
     this->robots = creationRobots();
-
+    
+    vector<Robot *> robotPtrs;
+    robotPtrs = getPointers(this->robots);
+    
     // initialisation des tuiles: disposition des 17 tuiles
     init_position_tuile();
 
@@ -223,8 +228,6 @@ Jeu::Jeu()
 
     // initialisation de la liste de joueurs en utilisant set_Joueurs
     set_Joueurs(); // initialisation de la liste de joueurs
-    // initialisation du sablier
-    le_sablier.Sablier(); // init le sablier a 0
 };
 
 // set tuile objectif_actuel, met a jour la position de cette tuile
@@ -252,6 +255,8 @@ void Jeu::annoncer_Solution()
 //
 void Jeu::proposer_Solution()
 {
+    vector<Robot *> robotPtrs;
+    robotPtrs = getPointers(this->robots);
 
     while (true)
     {
@@ -299,9 +304,9 @@ void Jeu::proposer_Solution()
     // nombre de deplacements effectues par les 4 robots
     for (size_t i = 0; i < robots.size(); ++i)
     {
-        std::cout << "Robot " << i + 1 << " : "
+        cout << "Robot " << i + 1 << " : "
                   << robots[i].getNombreDeDeplacements()
-                  << " deplacements" << std::endl;
+                  << " deplacements" << endl;
     }
 
     // nombre de deplacements total
@@ -312,26 +317,43 @@ void Jeu::proposer_Solution()
     }
     cout << "Nombre total de deplacements : " << total_deplacements << endl;
 
-    objectif_courantX = robots[couleurRobot].getX();
-    objectif_courantY = robots[couleurRobot].getY();
-    objectif_courant.Set_position(objectif_courantX, objectif_courantY);
+    // objectif_courantX = robots[couleurRobot].getX();
+    // objectif_courantY = robots[couleurRobot].getY();
+    // objectif_courant.Set_position(objectif_courantX, objectif_courantY);
 };
 
 // verifier si la position de la tuile objectif actuel est celle de la case objectif
-void Jeu::valider_solution(string NomJoueur)
+bool Jeu::valider_solution(string NomJoueur)
 {
-    if((objectif_actuel.get_X() == robots[objectif_actuel.getCouleur()].getX()) && (objectif_actuel.get_X() == robots[objectif_actuel.getCouleur()].getX()) )
+    Joueur *joueur_courant;
+    for (int i = 0; i < nbr_joueurs; i++) // La boucle permet de parcourir la liste de joueur
+                                          // afin de retrouver le joueur ayant proposé la solution
+                                          // à partir de son nom
     {
-
+        if (NomJoueur == this->joueurs[i].getNom())
+        {
+            joueur_courant = &(this->joueurs[i]);   // joueur_courant pointe sur le 
+                                                    // joueur parmi la liste ayant le nom indiqué en paramètre
+        }
     }
-    for (int i = 0; i < nbr_joueurs; i++)
+
+    if (!((objectif_actuel.get_X() == robots[objectif_actuel.getCouleur()].getX()) && (objectif_actuel.get_Y() == robots[objectif_actuel.getCouleur()].getY())))
     {
-            // Ajout de l'incrementation
-            if(NomJoueur == this->joueurs[i].getNom())
-            {
-                
-            }
-        
+        // Si la solution proposé par le joueur n'est pas valide alors son score est décrémenté.
+        joueur_courant->setScore(joueur_courant->getScore() - 1); // Décrémentation du score
+        cout<<"Proposition invalide : "<<endl;
+        cout<<joueur_courant->getNom()<<" vient de perdre 1 point suite à mauvaise proposition!"<<endl;
+        cout<<"Son score passe à "<< joueur_courant->getScore()<<endl;
+        return false;
+    }
+    else
+    {
+        // Si la solution proposé par le joueur est valide alors son score est incrémenté.
+        joueur_courant->setScore(joueur_courant->getScore() + 1); // Incrémentation du score
+        cout<<"Proposition valide : "<<endl;
+        cout<<joueur_courant->getNom()<<" vient de gagner 1 point !"<<endl;
+        cout<<"Son score passe à "<< joueur_courant->getScore()<<endl;
+        return true;
     }
 }
 
