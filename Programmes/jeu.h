@@ -1,8 +1,8 @@
 // Created by  on 2025/04/29
 #include "Plateau.h"
-#include "Robot.h"
+#include "robot.h"
 #include "sablier.h"
-#include "Joueurs.h"
+#include "Joueur.h"
 #include "Tuile_objectif.h"
 
 
@@ -13,8 +13,9 @@ class Jeu {
 private:
     Plateau le_plateau;
     vector<Robot> robots;
-    vector<Joueurs> liste_joueurs;
+    vector<Joueur> joueurs;
     Sablier le_sablier;
+    int nbr_joueurs;
     Tuile_objectif objectif_actuel;
     Tuile_objectif objectif_courant;
     vector<Tuile_objectif> liste_tuiles_objectifs;
@@ -29,20 +30,20 @@ void set_Joueurs();
 
 //Disposer automatiquement les tuiles dans les angles
 void init_position_tuile(int x, int y, char type_tuile);
+void init_position_tuile();
+void annoncer_Solution();
 
-Jeu::annoncer_Solution()
-
-Jeu::proposer_Solution()
+void proposer_Solution();
 
 //disposer les differents tokens et afficher le plateau
 void initialiser_Jeu();
 
 
 //generation d'une tuile objectif aleatoire
-Tuile_objectif tirer_tuile_objectif();
+void tirer_tuile_objectif();
 
 //comparer la solution du joueur actuel avec celle des autres joueurs
-void valider_solution();
+bool valider_solution(string NomJoueur);
 
 
 //destructeur

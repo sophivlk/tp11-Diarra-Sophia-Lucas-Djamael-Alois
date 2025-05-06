@@ -4,52 +4,44 @@
 #include <ctime>
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
 #include "Jeu.h"
 
+void Jeu::set_Joueurs()
+{
 
-
-// Fonction pour vérifier si une position est libre pour eviter le chevauchement
-bool estPositionLibre(int x, int y, const std::vector<Robot>& robots) {
-    for (const auto& robot : robots) {
-        if (robot.getX() == x && robot.getY() == y)
-            return false; // Position occupée
-    }
-    return true; // Position libre
-}
-
-
-
-void Jeu::set_Joueurs(){
-    
     cout << "=== Ajout des joueurs ===" << endl;
-    while (true) {
+    while (true)
+    {
         cout << "Entrez le nom du joueur puis entrée pour valider (ou tapez 'commencer la partie' pour démarrer) :" << endl;
         string input;
         getline(cin, input);
-    
-        if (input == "commencer la partie") break;
-        if (!input.empty()) {
+
+        if (input == "commencer la partie")
+            break;
+        if (!input.empty())
+        {
             Joueur j(input, 0, 0); // constructeur avec nom, score, déplacements
             joueurs.push_back(j);
         }
     }
     nbr_joueurs = joueurs.size(); // Mettre à jour le nombre de joueurs
-    cout<< "Nombre de joueurs : " << nbr_joueurs << endl;
+    cout << "Nombre de joueurs : " << nbr_joueurs << endl;
     // Affichage des joueurs
-    cout << "\nil y a " <<  << " joueurs dans la partie" << endl;
+    cout << "\nil y a " << nbr_joueurs << " joueurs dans la partie" << endl;
     cout << "\n=== Liste des joueurs ===" << endl;
-    for (size_t i = 0; i < joueurs.size(); ++i) {
+    for (size_t i = 0; i < joueurs.size(); ++i)
+    {
         cout << "Joueur " << i + 1 << " : " << joueurs[i].getNom() << endl;
     }
-    
-    //commencer la partie
+
+    // commencer la partie
     cout << "\n=== Partie commence ===" << endl;
- }
+}
 
-
-//a modifier
+// a modifier
 void Jeu::init_position_tuile()
 {
     // Initialisation du generateur aleatoire
@@ -62,8 +54,8 @@ void Jeu::init_position_tuile()
         int x, y;
         for (int i = 0; i < 17; i++)
         {
-            this->le_plateau.getPosition(x,y);
-            allAngles.emplace_back(x,y);    
+            this->le_plateau.getPositionAngles(x, y);
+            allAngles.emplace_back(x, y);
         }
     }
 
@@ -212,126 +204,138 @@ void Jeu::init_position_tuile()
     }
 };
 
+// Constructeur par défaut
+Jeu::Jeu()
+{
+    vector<Robot*> vRobots;
+    // Création des robots
+    this->robots = creationRobots();
 
+    // initialisation des tuiles: disposition des 17 tuiles
+    init_position_tuile();
 
-    // Constructeur par défaut
-Jeu::Jeu(){
+    // initialisation du plateau
+    Plateau le_plateau;            // creation d'un plateau temporaire
+    le_plateau.genererGrille();    // creation d'un plateau de jeu
+    le_plateau.placerMur();        // affichage du plateau de jeu
+    le_plateau.placerAngle();      // placement des angles
+    le_plateau.afficher_plateau(); // affichage du plateau de jeu
 
-
-    //reprendre la fonction creationRobot de la branche main_test de 
-    //intialisation des robots
-    srand(time(0)); // Initialisation du générateur aléatoire
-    for (int i = 0; i < 4; ++i) {
-        int x, y;
-        do {
-            x = rand() % 16;
-            y = rand() % 16;
-        } while (!estPositionLibre(x, y, this->robots)); // Vérifie la position dans le vecteur déjà créé
- 
-        robots.push_back(Robot(x, y, static_cast<TypeCouleur>(i))); // Crée un robot avec une couleur différente
-    }
-    return robots; // Retourne la liste créée
-    
-    //initialisation des tuiles: disposition des 17 tuiles
-    Jeu.init_position_tuile();
-
-    //initialisation du plateau
-    Plateau le_plateau; //creation d'un plateau temporaire
-    le_plateau.genererGrille(); //creation d'un plateau de jeu
-    le_plateau.placerMur(); //affichage du plateau de jeu
-    le_plateau.placerAngle(); //placement des angles
-    le_plateau.afficher_plateau(); //affichage du plateau de jeu
-
-    //initialisation de la liste de joueurs en utilisant set_Joueurs
-    set_Joueurs(); //initialisation de la liste de joueurs
-    //initialisation du sablier
-    le_sablier.Sablier(); //init le sablier a 0
+    // initialisation de la liste de joueurs en utilisant set_Joueurs
+    set_Joueurs(); // initialisation de la liste de joueurs
+    // initialisation du sablier
+    le_sablier.Sablier(); // init le sablier a 0
 };
-
-//set tuile objectif_actuel, met a jour la position de cette tuile
-//tirer une tuile parmi les 17 et le placer au centre 
 
 // set tuile objectif_actuel, met a jour la position de cette tuile
-Tuile_objectif Jeu::Tuile_objectif tirer_tuile_objectif()
+// tirer une tuile parmi les 17 et le placer au centre
+
+// set tuile objectif_actuel, met a jour la position de cette tuile
+void Jeu::tirer_tuile_objectif()
 {
-    int random_tuile = rand()%17;
+    int random_tuile = rand() % 17;
+    // Definir la tuile principale comme étant une tuile aléatoire choisit parmis les 17 tuiles définies
     this->objectif_actuel = this->liste_tuiles_objectifs[random_tuile];
-    tuile_couleur= objectif_actuel.get_couleur();
-    tuile_symbole= objectif_actuel.get_symbole();
+    // Afficher un message informant sur la tuile choisi
+    cout << "L'objectif est la tuile de couleur " << objectif_actuel.getCouleur()
+         << " et de symbole " << objectif_actuel.getSymbole() << endl
+         << "Positionnée en (" << objectif_actuel.get_X() << "; " << objectif_actuel.get_Y() << ")" << endl;
 };
 
- //demarre la phase de recherche et activation du sablier
-void Jeu::annoncer_Solution(){
-    //Entrer le nombre de deplacement
-    le_sablier.activer_Sablier();
+// demarre la phase de recherche et activation du sablier
+void Jeu::annoncer_Solution()
+{
+    // Entrer le nombre de deplacement
+    le_sablier.start_timer();
 };
 
- //
-void Jeu::proposer_Solution(){
-    
-while (true) {
+//
+void Jeu::proposer_Solution()
+{
 
-    cout << "\nEntrez la couleur du robot a deplacer (rouge, vert, bleu, jaune) ou 'fin' pour terminer : " << endl;
-    string couleurInput;
-    getline(cin, couleurInput);
+    while (true)
+    {
 
-    if (couleurInput == "fin") break;
-    // Convertir la chaine de caractères couleurInput en TypeCouleur
-    TypeCouleur couleurRobot;
-    if (couleurInput == "rouge") {
-        couleurRobot = ROUGE;
-    } else if (couleurInput == "vert") {
-        couleurRobot = VERT;
-    } else if (couleurInput == "bleu") {
-        couleurRobot = BLEU;
-    } else if (couleurInput == "jaune") {
-        couleurRobot = JAUNE;
-    } else {
-        cout << "Couleur invalide" << endl;
-        continue; // Passer à l'itération suivante de la boucle
+        cout << "\nEntrez la couleur du robot a deplacer (rouge, vert, bleu, jaune) ou 'fin' pour terminer : " << endl;
+        string couleurInput;
+        getline(cin, couleurInput);
+
+        if (couleurInput == "fin")
+            break;
+        // Convertir la chaine de caractères couleurInput en TypeCouleur
+        TypeCouleur couleurRobot;
+        if (couleurInput == "rouge")
+        {
+            couleurRobot = ROUGE;
+        }
+        else if (couleurInput == "vert")
+        {
+            couleurRobot = VERT;
+        }
+        else if (couleurInput == "bleu")
+        {
+            couleurRobot = BLEU;
+        }
+        else if (couleurInput == "jaune")
+        {
+            couleurRobot = JAUNE;
+        }
+        else
+        {
+            cout << "Couleur invalide" << endl;
+            continue; // Passer à l'itération suivante de la boucle
+        }
+
+        cout << "Entrez la direction (haut, bas, gauche, droite) du robot " << couleurInput << " : " << endl;
+        string directionInput;
+        getline(cin, directionInput);
+
+        robots[couleurRobot].deplacement(directionInput, robotPtrs);
+        cout << "Robot " << couleurInput << " : (" << robots[couleurRobot].getX() << ", " << robots[couleurRobot].getY() << ")" << endl;
+
+        le_plateau.afficher_plateau();
     }
 
-    cout << "Entrez la direction (haut, bas, gauche, droite) du robot " << couleurInput << " : " << endl;
-    string directionInput;
-    getline(cin, directionInput);
+    // nombre de deplacements effectues par les 4 robots
+    for (size_t i = 0; i < robots.size(); ++i)
+    {
+        std::cout << "Robot " << i + 1 << " : "
+                  << robots[i].getNombreDeDeplacements()
+                  << " deplacements" << std::endl;
+    }
 
+    // nombre de deplacements total
+    int total_deplacements = 0;
+    for (size_t i = 0; i < robots.size(); ++i)
+    {
+        total_deplacements += robots[i].getNombreDeDeplacements();
+    }
+    cout << "Nombre total de deplacements : " << total_deplacements << endl;
 
-    robots[couleurRobot].deplacement(directionInput, robotPtrs);
-    cout << "Robot " << couleurInput << " : (" << robots[couleurRobot].getX() << ", " << robots[couleurRobot].getY() << ")" << endl;
-
-
-    le_plateau.afficher_plateau();
-}
-
-//nombre de deplacements effectues par les 4 robots
-for(size_t i = 0; i < robots.size(); ++i) {
-    std::cout << "Robot " << i+1 << " : " 
-                << robots[i].getNombreDeDeplacements() 
-                << " deplacements" << std::endl;
-}
-
-//nombre de deplacements total
-int total_deplacements = 0;
-for(size_t i = 0; i < robots.size(); ++i) {
-    total_deplacements += robots[i].getNombreDeDeplacements();
-}
-cout << "Nombre total de deplacements : " << total_deplacements << endl;
-
-objectif_courantX = robots[couleurRobot].getX();
-objectif_courantY = robots[couleurRobot].getY();
-objectif_courant.Set_position(objectif_courantX,objectif_courantY);
+    objectif_courantX = robots[couleurRobot].getX();
+    objectif_courantY = robots[couleurRobot].getY();
+    objectif_courant.Set_position(objectif_courantX, objectif_courantY);
 };
 
+// verifier si la position de la tuile objectif actuel est celle de la case objectif
+void Jeu::valider_solution(string NomJoueur)
+{
+    if((objectif_actuel.get_X() == robots[objectif_actuel.getCouleur()].getX()) && (objectif_actuel.get_X() == robots[objectif_actuel.getCouleur()].getX()) )
+    {
 
-//verifier si la position de la tuile objectif actuel est celle de la case objectif
-void Jeu::valider_solution(Tuile_objectif objectif_courant){
-    posX= objectif_actuel.get_X();
-    posY= objectif_actuel.get_Y();
-    if ((posX,posY)= (objectif_courant.get_X(),objectif_courant.get_Y())){
-        cout << "Solution incorrecte" << endl;
-};
+    }
+    for (int i = 0; i < nbr_joueurs; i++)
+    {
+            // Ajout de l'incrementation
+            if(NomJoueur == this->joueurs[i].getNom())
+            {
+                
+            }
+        
+    }
 }
 
-Jeu::~Jeu() {
-    //nothing to do here
+Jeu::~Jeu()
+{
+    // nothing to do here
 }
